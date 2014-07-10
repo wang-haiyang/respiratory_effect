@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=kM4Hamkg2HEVxB5tO7y2cV2v"></script>
+<title> Respiratory effects</title>
+<style type="text/css">
+    html { height:100% }   
+    body { height:100%; margin:0px; padding:0px } 
+    #contrl {height:100px;width:100%;}
+    #logo {width:30%; margin-left: 25px;margin-top: 15px}
+    #allmap {width: 100%;height: 600px;overflow: hidden;margin-top: 20px;border:red solid thin}
+    #footer {width:100%;height:100px;}
+</style>
+</head>
+<body>
+<div id="contrl">
+    <div id="logo"><img src="./images/logo.png"></div>
+</div>
+<div id="allmap"></div>
+<div id="footer"></div>
+</body>
+</html>
+<script type="text/javascript">
+
+    // 百度地图API功能
+    var map = new BMap.Map("allmap");            // 创建Map实例
+    var point = new BMap.Point(120.283814,30.175999);    // 创建点坐标
+    
+    map.centerAndZoom(point,14);                     // 初始化地图,设置中心点坐标和地图级别。
+    
+    map.enableScrollWheelZoom();                            //启用滚轮放大缩小
+    
+    map.addEventListener("click",function(e){
+    alert(e.point.lng + "," + e.point.lat);
+    });//单击显示经纬度
+    map.addControl(new BMap.ScaleControl());                    // 添加默认比例尺控件
+
+    map.addControl(new BMap.ScaleControl({anchor: BMAP_ANCHOR_BOTTOM_RIGHT}));                    // 右下
+    map.addControl(new BMap.MapTypeControl({mapTypes: [BMAP_NORMAL_MAP,BMAP_HYBRID_MAP]}));     //2D图，卫星图
+
+    // map.addControl(new BMap.MapTypeControl({anchor: BMAP_ANCHOR_TOP_RIGHT}));    //左上角，默认地图控件
+    map.setCurrentCity("杭州");   //由于有3D图，需要设置城市哦
+
+    map.addControl(new BMap.NavigationControl());  //添加默认缩放平移控件
+
+    //杭州区域所在经度120.166594,30.303376;120.21672,30.263426
+    var leftX=120.166594,leftTopX=120.166594,rightTopX=120.21672,rightX=120.21672;
+    //杭州区域所在纬度
+    var leftY=30.303376,leftTopY=30.263426,rightTopY=30.263426,rightY=30.303376;
+               
+    //设置经纬度分为多少段
+    var partX=14,partY=14;
+               
+    //计算经纬度相差数量
+    var differX=leftX-rightX;
+    var differY=leftY-leftTopY;
+    //计算经纬度每段间隔多少
+    var intervalX=differX/partX;
+    var intervalY=differY/partY;
+    // alert(intervalX+":"+intervalY);
+    //以上参数设置完毕后，这里是按照从左到右的顺序来确定各个区域的经纬度
+               
+    var lX,lTopX,rTopX,rX;
+    var lY,lTopY,rTopY,rY;
+               
+    var num=0;//设置多边形id
+               
+    for(var i=0;i<=partX;i++){
+        for(var j=0;j<=partY;j++){
+            var arr = new Array();//经纬度坐标数组 
+                            
+            lX= (leftX-intervalX*i).toString();
+            lTopX= (leftX-intervalX*i).toString();
+            rTopX= (leftX-intervalX*(i+1)).toString();
+            rX= (leftX-intervalX*(i+1)).toString();
+                          
+            lY= (leftY-intervalY*j).toString();;
+            lTopY= (leftY-intervalY*(j+1)).toString();
+            rTopY= (leftY-intervalY*(j+1)).toString();
+            rY= (leftY-intervalY*j).toString();
+            
+            console.log(lX,rTopX,lTopY,lY);   
+                      
+                          
+            arr.push(new BMap.Point(lX,lY));    
+            arr.push(new BMap.Point(lTopX,lTopY));    
+            arr.push(new BMap.Point(rTopX,rTopY)); 
+            arr.push(new BMap.Point(rX,rY));  
+                      
+                      
+            var polygon=new BMap.Polygon(arr,{   
+                id:"polygon"+num,//多边形ID   
+                // path:arr,//多边形顶点经纬度数组   
+                strokeColor:"#0000ff",//线颜色   
+                strokeOpacity:0.2,//线透明度   
+                strokeWeight:3, //线宽   
+                fillColor: "#f5deb3",//填充色   
+                fillOpacity: 0.006 //填充透明度   
+                });   
+            map.addOverlay(polygon);  
+            num++;
+        }              
+    }
+</script>

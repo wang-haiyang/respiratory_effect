@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
+<html class="not-ie" lang="en">
+<!--<![endif]-->
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+        <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=kM4Hamkg2HEVxB5tO7y2cV2v"></script>
+        <script src="./js/jquery-1.8.3.min.js"></script>
+        <script src="./js/bootstrap.min.js"></script>
+        <script src="./js/highcharts.js"></script>
+        <script src="./js/modules/exporting.js"></script>
+        <title> Respiratory effects </title>
+        <link href="./css/bootstrap.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="./css/bootstrap-theme.min.css">
+        <link href="./css/bmap.css" rel="stylesheet">
+    </head>
+    <body>
+        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand" href="#"><strong>Respiratory effects</strong></a>
+            </div>
+            <div class="navbar-collapse collapse">
+              <ul class="nav navbar-nav navbar-right">
+                <li class="active"><a href="#">首页</a></li>
+                <li><a href="./heatmap.html">HeatMap DEMO</a></li>
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">关于我们 <b class="caret"></b></a>
+                  <ul class="dropdown-menu">
+                    <li><a href="#">Action</a></li>
+                    <li><a href="#">Another action</a></li>
+                    <li><a href="#">Something else here</a></li>
+                    <li class="divider"></li>
+                    <li class="dropdown-header">Nav header</li>
+                    <li><a href="#">Separated link</a></li>
+                    <li><a href="#">One more separated link</a></li>
+                  </ul>
+                </li>
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">产品中心 <b class="caret"></b></a>
+                  <ul class="dropdown-menu">
+                    <li><a href="#">Action</a></li>
+                    <li><a href="#">Another action</a></li>
+                    <li><a href="#">Something else here</a></li>
+                    <li class="divider"></li>
+                    <li class="dropdown-header">Nav header</li>
+                    <li><a href="#">Separated link</a></li>
+                    <li><a href="#">One more separated link</a></li>
+                  </ul>
+                </li>
+                <li><a href="./contact.html">联系我们</a></li>
+              </ul>
+            </div><!--/.nav-collapse -->
+          </div>
+        </div>
+        <div id="contrl">
+            <div id="logo"><img src="./images/logo.png"></div>
+        </div>
+        <br>
+        <hr>
+        <div id="chart_container"></div>
+        <br><br>
+        <div id="allmap"></div>
+        <br><br><br>
+        <footer>
+          <div class="container">
+            <div class="row">
+              <div class="col-xs-7">
+                <h3 class="footer-title">Contribution</h3>
+                <p>Do you want to join us?<br/>
+                  Contact us and tell what you are interested in.<br/>
+                  <br>
+                  Email Address: <a href="skylmsgq@gmail.com" target="_blank">skylmsgq@gmail.com</a>
+                </p>
+
+                <br>
+                <p>© 2014~2015 Omnilab. · <a href="#">SJTU</a></p>
+
+              </div> <!-- /col-xs-7 -->
+
+              <div class="col-xs-5">
+                <div class="footer-banner">
+                  <h3 class="footer-title">Get More Information about Our LAB</h3>
+                  Refer: <a href="#">Type your Books here</a>
+                  <br>
+                  Go to: <a href="#" target="_blank">omnilab.sjtu.edu.cn</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </footer>
+    </body>
+</html>
+<script type="text/javascript">
+    // 百度地图API功能
+    var map = new BMap.Map("allmap");            // 创建Map实例
+    var point = new BMap.Point(120.20084676666,30.28273516666666);    // 创建点坐标
+    
+    map.centerAndZoom(point,22);                     // 初始化地图,设置中心点坐标和地图级别。
+    
+    map.enableScrollWheelZoom();                            //启用滚轮放大缩小
+    
+    // map.addEventListener("click",function(e){
+    // alert(e.point.lng + "," + e.point.lat);
+    // });//单击显示经纬度
+
+    map.addControl(new BMap.ScaleControl());                    // 添加默认比例尺控件
+
+    map.addControl(new BMap.ScaleControl({anchor: BMAP_ANCHOR_BOTTOM_RIGHT}));                    // 右下
+    map.addControl(new BMap.MapTypeControl({mapTypes: [BMAP_NORMAL_MAP,BMAP_HYBRID_MAP]}));     //2D图，卫星图
+
+    // map.addControl(new BMap.MapTypeControl({anchor: BMAP_ANCHOR_TOP_RIGHT}));    //左上角，默认地图控件
+    map.setCurrentCity("杭州");   //由于有3D图，需要设置城市哦
+
+    map.addControl(new BMap.NavigationControl());  //添加默认缩放平移控件
+
+    //杭州区域所在经度
+    var leftX=120.166594,leftTopX=120.166594,rightTopX=120.21672,rightX=120.21672;
+    //杭州区域所在纬度
+    var leftY=30.303376,leftTopY=30.263426,rightTopY=30.263426,rightY=30.303376;
+               
+    //设置经纬度分为多少段
+    var partX=14,partY=14;
+               
+    //计算经纬度相差数量
+    var differX=leftX-rightX;
+    var differY=leftY-leftTopY;
+    //计算经纬度每段间隔多少
+    var intervalX=differX/partX;
+    var intervalY=differY/partY;
+    // alert(intervalX+":"+intervalY);
+    //以上参数设置完毕后，这里是按照从左到右的顺序来确定各个区域的经纬度
+               
+    var lX,lTopX,rTopX,rX;
+    var lY,lTopY,rTopY,rY;
+               
+    var num=0;//设置多边形id
+    var polygon = new Array();
+    // var marker = new Array();
+
+    for(var i=0;i<=partY;i++){
+        for(var j=0;j<=partX;j++){
+            var arr = new Array();//经纬度坐标数组 
+                            
+            lX= (leftX-intervalX*j).toString();
+            lTopX= (leftX-intervalX*j).toString();
+            rTopX= (leftX-intervalX*(j+1)).toString();
+            rX= (leftX-intervalX*(j+1)).toString();
+                          
+            lY= (leftY-intervalY*i).toString();;
+            lTopY= (leftY-intervalY*(i+1)).toString();
+            rTopY= (leftY-intervalY*(i+1)).toString();
+            rY= (leftY-intervalY*i).toString();
+            
+            // console.log(lX,rTopX,lTopY,lY);          
+                          
+            arr.push(new BMap.Point(lX,lY));    
+            arr.push(new BMap.Point(lTopX,lTopY));    
+            arr.push(new BMap.Point(rTopX,rTopY)); 
+            arr.push(new BMap.Point(rX,rY));  
+                      
+                      
+            polygon[num]=new BMap.Polygon(arr,{   
+                id:"polygon"+num,//多边形ID   
+                // path:arr,//多边形顶点经纬度数组   
+                strokeColor:"#0000ff",//线颜色   
+                strokeOpacity:0.2,//线透明度   
+                strokeWeight:3, //线宽   
+                fillColor: "#f5deb3",//填充色   
+                fillOpacity: 0.006 //填充透明度   
+                });   
+            map.addOverlay(polygon[num]); 
+
+            
+            var markerX = leftX-intervalX*(j+0.5);
+            var markerY = leftY-intervalY*(i+0.5);
+            // console.log(markerX,markerY);
+            chart_info(markerX,markerY,num);
+
+            num++;
+        }              
+    }
+
+    function chart_info(markerX,markerY,num){
+        var point = new BMap.Point(markerX,markerY);
+        var marker = new BMap.Marker(point);
+        map.addOverlay(marker);
+
+        var sContent = "<div id='container' style='width: 600px; height: 300px; margin: 0 auto'></div>";
+        var infoWindow = new BMap.InfoWindow(sContent);  // 创建信息窗口对象
+            
+        marker.addEventListener("click", function(){          
+            this.openInfoWindow(infoWindow);
+            var user = new Array();
+            var packet = new Array();
+            var flow = new Array();
+            $.get("./data/"+(num+1)+".rst",function(data,status){
+                var lines = data.split("\n");
+                // console.log("./data/cell_"+(num+1)+".rst");
+                for(var i = 0;i<lines.length;i++){
+                    user[i] = parseInt(lines[i].split("\t")[0]);
+                    packet[i] = parseInt(lines[i].split("\t")[1])/1000;
+                    flow[i] = parseInt(lines[i].split("\t")[2])/1000000;
+                    // console.log(flow[i]);
+                }
+            console.log(user[0]);
+
+            // if (user[0] == 0){
+            //     map.removeOverlay(marker);
+            // }
+    
+            $('#container').highcharts({
+            chart: {
+                type: 'area'
+            },
+            title: {
+                text: 'Historic flow data'
+            },
+            subtitle: {
+                text: 'Source: Hangzhou data'
+            },
+            xAxis: {
+                categories: ['06:00', '06:30', '07:00', '07:30', '08:00', '08:30', '09:00','09:30','10:00','10:30','11:00','11:30','12:00','12:30','13:30','14:00','14:30','15:00','15:30','16:00','16:30','17:00','17:30','18:00','18:30','19:00','19:30','20:00','20:30','21:00','21:30','21:30','22:00','22:30','23:00','23:30','24:00'],
+                tickmarkPlacement: 'on',
+                title: {
+                    enabled: false
+                }
+            },
+            yAxis: {
+                title: {
+                    text: 'number'
+                },
+                labels: {
+                    formatter: function() {
+                        return this.value ;
+                    }
+                }
+            },
+            tooltip: {
+                shared: true,
+                valueSuffix: ' '
+            },
+            plotOptions: {
+                area: {
+                    stacking: 'normal',
+                    lineColor: '#666666',
+                    lineWidth: 1,
+                    marker: {
+                        lineWidth: 1,
+                        lineColor: '#666666'
+                    }
+                }
+            },
+            series: [{
+                name: 'user',
+                // data: [502, 635, 809, 947, 1402, 3634, 5268]
+                data:user
+            },{
+                name: 'packet',
+                // data: [502, 635, 809, 947, 1402, 3634, 5268]
+                data:packet
+            },{
+                name: 'flow',
+                // data: [502, 635, 809, 947, 1402, 3634, 5268]
+                data:flow
+            }]
+        });    
+
+            })
+        });
+    }
+</script>
+<script type="text/javascript">
+$(function () {
+    $.get('data/flow_count.txt',function(data,status){
+        var flow = new Array();
+        lines = data.split('\n');
+        // console.log(lines);
+        for (i=0;i<lines.length;i++){
+            flow[i] = new Array();
+            data = lines[i].split('\t');
+            for (j=0;j<data.length-1;j++){
+                flow[i][j] = parseInt(data[j]);
+            } 
+        }
+        // console.log(flow);
+        $('#chart_container').highcharts({
+            // chart: {
+            //     type: 'area'
+            // },
+            title: {
+                text: 'Historic flow data'
+            },
+            subtitle: {
+                text: 'Source: Hangzhou data'
+            },
+            xAxis: {
+                categories: ['06:00', '06:30', '07:00', '07:30', '08:00', '08:30', '09:00','09:30','10:00','10:30','11:00','11:30','12:00','12:30','13:30','14:00','14:30','15:00','15:30','16:00','16:30','17:00','17:30','18:00','18:30','19:00','19:30','20:00','20:30','21:00','21:30','21:30','22:00','22:30','23:00','23:30','24:00'],
+                // tickmarkPlacement: 'on',
+                // title: {
+                //     enabled: false
+                // }
+            },
+            yAxis: {
+                title: {
+                    text: 'flow counts'
+                },
+                // labels: {
+                //     formatter: function() {
+                //         return this.value / 1000;
+                //     }
+                // }
+                plotLines: [{
+                    value: 0,
+                    width: 1,
+                    color: '#808080'
+                }]
+            },
+            tooltip: {
+                shared: true,
+                // valueSuffix: ' thousands'
+            },
+            // plotOptions: {
+            //     area: {
+            //         stacking: 'normal',
+            //         lineColor: '#666666',
+            //         lineWidth: 1,
+            //         marker: {
+            //             lineWidth: 1,
+            //             lineColor: '#666666'
+            //         }
+            //     }
+            // },
+            legend: {
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'middle',
+                borderWidth: 0
+            },
+            series: [{
+                name: 'part1',
+                data: flow[0]
+            }, {
+                name: 'part2',
+                data: flow[1]
+            }, {
+                name: 'part3',
+                data: flow[2]
+            }, {
+                name: 'part4',
+                data: flow[3]
+            }, {
+                name: 'part5',
+                data: flow[4]
+            }, {
+                name: 'part6',
+                data: flow[5]
+            }, {
+                name: 'part7',
+                data: flow[6]
+            }, {
+                name: 'part8',
+                data: flow[7]
+            }, {
+                name: 'part9',
+                data: flow[8]
+            }, {
+                name: 'part10',
+                data: flow[9]
+            }, {
+                name: 'part11',
+                data: flow[10]
+            }, {
+                name: 'part12',
+                data: flow[11]
+            }]
+        });
+    })
+});
+</script>
+    
